@@ -1,23 +1,28 @@
 <form [formGroup]="form" (ngSubmit)="save($event)">
-  <p>
-    Name: {{ nameField.value }} {{ nameField.valid }}
-    <input
-      [class.is-valid]="isNameFieldValid"
-      [class.is-invalid]="isNameFieldInvalid"
-      type="text"
-      formControlName="name"/>
-    <button [disabled]="nameField.invalid" (click)="getNameValue()">Get value</button>
-    <!-- <code>
-      <pre>{{ nameField | json }}</pre>
-    </code> -->
-  </p>
-  <div class="messages" [class.active]="isNameFieldInvalid">
-    <p>
-      <strong *ngIf="nameField.touched && nameField.hasError('required')">Este campo es requerido</strong>
-    </p>
+  <div formGroupName="fullName">
+    <mat-form-field appearance="fill">
+      <mat-label>Name: {{ nameField.value }}</mat-label>
+      <input matInput type="text" formControlName="name">
+      <mat-icon matSuffix *ngIf="isNameFieldValid">done</mat-icon>
+      <mat-icon matSuffix *ngIf="isNameFieldInvalid">close</mat-icon>
+    </mat-form-field>
+    <div class="messages" [class.active]="isNameFieldInvalid">
+      <mat-error *ngIf="nameField.hasError('required')">
+        Este campo es requerido
+      </mat-error>
+      <mat-error *ngIf="nameField.hasError('maxlength')">
+        debe tener maximo 10 c
+      </mat-error>
+      <mat-error *ngIf="nameField.hasError('pattern')">
+        No debe tener carac..
+      </mat-error>
+    </div>
 
     <p>
-      <strong *ngIf="nameField.touched && nameField.hasError('maxlength')">debe tener maximo 10 c</strong>
+      Last Name: {{ lastField.value }} {{ lastField.valid }}
+      <input
+        type="text"
+        formControlName="last"/>
     </p>
   </div>
 
@@ -26,11 +31,47 @@
     <input type="email" formControlName="email"/>
   </p>
 
+  <div class="messages" [class.active]="emailField.touched && phoneField.invalid">
+    <p>
+      <strong *ngIf="emailField.hasError('required')">
+        Este campo es requerido
+      </strong>
+    </p>
+    <p>
+      <strong *ngIf="emailField.hasError('email')">
+        Esto no es un emial valido
+      </strong>
+    </p>
+  </div>
+
+  <p>
+    Age: {{ ageField.value }}
+    <input type="number" formControlName="age"/>
+  </p>
+
+  <div class="messages" [class.active]="ageField.touched && ageField.invalid">
+    <p>
+      <strong *ngIf="ageField.hasError('required')">Este campo es requerido</strong>
+    </p>
+    <p>
+      <strong *ngIf="ageField.hasError('min')">Debe ser mayor de edad</strong>
+    </p>
+    <p>
+      <strong *ngIf="ageField.hasError('max')">Debe ser menor de 100 años</strong>
+    </p>
+  </div>
+
 
   <p>
     Phone: {{ phoneField.value }}
     <input type="tel" formControlName="phone"/>
   </p>
+
+  <div class="messages" [class.active]="phoneField.touched && phoneField.invalid">
+    <p>
+      <strong *ngIf="phoneField.touched && phoneField.hasError('required')">Este campo es requerido</strong>
+    </p>
+  </div>
 
   <p>
     Color: {{ colorField.value }}
@@ -109,8 +150,3 @@
     <button type="submit">Enviar</button>
   </p>
 </form>
-
-
-
-
-
