@@ -1,7 +1,7 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 
 export class MyValidators {
-  static matchPasswords: any | ValidatorFn | ValidatorFn[];
+  // static matchPasswords: any | ValidatorFn | ValidatorFn[];
 
   static isPriceValid(control: AbstractControl) {
     const value = control.value;
@@ -18,6 +18,15 @@ export class MyValidators {
       return { invalid_paswoord: true };
     }
     return null;
+  }
+
+  static matchPasswords(control: AbstractControl) {
+    const password = control.get('password').value;
+    const confirmPaswword = control.get('confirmPassword').value;
+    if (password == confirmPaswword) {
+      return null;
+    } 
+    return {match_password: true}
   }
 }
 

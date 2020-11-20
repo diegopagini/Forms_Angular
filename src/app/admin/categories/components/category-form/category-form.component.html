@@ -1,1 +1,38 @@
-<p>category-form works!</p>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Categoria</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-xs">
+          <mat-form-field>
+            <mat-label>Nombe</mat-label>
+            <input type="text" placeholder="Nombre" formControlName="name" matInput>
+            <div class="messages" *ngIf="nameField.touched && nameField.invalid">
+              <mat-error *ngIf="nameField.hasError('required')">
+                Este campo es requerido
+              </mat-error>
+            </div>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs">
+          <mat-form-field>
+            <mat-label>Image</mat-label>
+            <input type="text" placeholder="Image" formControlName="image" matInput>
+            <div class="messages" *ngIf="imageField.touched && imageField.invalid">
+              <mat-error *ngIf="imageField.hasError('required')">
+                Este campo es requerido
+              </mat-error>
+            </div>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-mat-button type="submit">Guardar categoria</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
