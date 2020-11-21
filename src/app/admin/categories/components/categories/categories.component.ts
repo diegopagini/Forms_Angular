@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Category } from 'src/app/core/models/category.model';
-import { CategoriesService } from 'src/app/core/services/categories.service';
+
+import { CategoriesService } from './../../../../core/services/categories.service';
+import { Category } from './../../../../core/models/category.model';
+
 
 @Component({
   selector: 'app-categories',
@@ -10,18 +11,22 @@ import { CategoriesService } from 'src/app/core/services/categories.service';
 })
 export class CategoriesComponent implements OnInit {
 
-  public data$: Observable<Category[]>
+  categories: Category[] = [];
+  displayedColumns: string[] = ['id', 'name', 'image', 'actions'];
 
   constructor(
     private categoriesService: CategoriesService,
   ) { }
 
   ngOnInit(): void {
-    this.getAllInfo()
+    this.getCategories();
   }
 
-  getAllInfo(): void {
-    this.data$ = this.categoriesService.getAllCategories();
+  private getCategories() {
+    this.categoriesService.getAllCategories()
+    .subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
 }

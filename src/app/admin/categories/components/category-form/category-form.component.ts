@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { CategoriesService } from './../../../../core/services/categories.service';
 import { MyValidators } from './../../../../utils/validators';
+import { Category } from './../../../../core/models/category.model';
+
+import { CategoriesService } from './../../../../core/services/categories.service';
 
 @Component({
   selector: 'app-category-form',
@@ -17,12 +18,22 @@ export class CategoryFormComponent implements OnInit {
 
   form: FormGroup;
   image$: Observable<string>;
+  isNew = true;
+
+  @Input()
+  set category(data: Category) {
+    if (data) {
+      this.isNew = false;
+      this.form.patchValue(data);
+    }
+  }
+  @Output() create = new EventEmitter();
+  @Output() update = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
+    private storage: AngularFireStorage,
     private categoriesService: CategoriesService,
-    private router: Router,
-    private storage: AngularFireStorage
   ) {
     this.buildForm();
   }
@@ -47,18 +58,14 @@ export class CategoryFormComponent implements OnInit {
 
   save() {
     if (this.form.valid) {
-      this.createCategory();
+      if (this.isNew) {
+        this.create.emit(this.form.value);
+      } else {
+        this.update.emit(this.form.value);
+      }
     } else {
       this.form.markAllAsTouched();
     }
-  }
-
-  private createCategory() {
-    const data = this.form.value;
-    this.categoriesService.createCategory(data)
-    .subscribe(rta => {
-      this.router.navigate(['/admin/categories']);
-    });
   }
 
   uploadFile(event) {
